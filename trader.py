@@ -5,6 +5,7 @@ import string
 class Trader:
 
     product_max = 50
+    product = "RAINFOREST_RESIN"
 
     def calcBidQuantity(self, state:TradingState):
         return 1
@@ -15,24 +16,24 @@ class Trader:
 
     
     def run(self, state: TradingState):
-        product = "RAINFOREST_RESIN"
+        product = self.product
         orderDepth = state.order_depths[product]
         result = {}
         orders = []
-        if len(orderDepth.sell_orders) > 0 or len(orderDepth.buy_orders) > 0:
-            highBid = list(orderDepth.buy_orders.keys())[0] if len(orderDepth.buy_orders) > 0 else 9999
-            lowAsk = list(orderDepth.sell_orders.keys())[0] if len(orderDepth.sell_orders) > 0 else 10001
+        if len(orderDepth.sell_orders) > 0 and len(orderDepth.buy_orders) > 0:
+            highBid = list(orderDepth.buy_orders.keys())[0]
+            lowAsk = list(orderDepth.sell_orders.keys())[0]
             if state.position.get(product) is None or state.position.get(product) < self.product_max:
                 orders.append(Order(product, highBid, self.calcBidQuantity(state)))
             if state.position.get(product) is not None and state.position.get(product) > 0:
                 orders.append(Order(product, lowAsk, self.calcAskQuantity(state)))
-        else:
-            #bid for one lower than its value
-            if state.position.get(product) < self.product_max:
-                orders.append(Order(product, 9999, 5)) 
-            #sell for one higher than its value
-            if state.position.get(product) > 4:
-                orders.append(Order(product, 10001, -5)) 
+        # else:
+        #     #bid for one lower than its value
+        #     if state.position.get(product) < self.product_max:
+        #         orders.append(Order(product, 9999, 5)) 
+        #     #sell for one higher than its value
+        #     if state.position.get(product) > 4:
+        #         orders.append(Order(product, 10001, -5)) 
             
         result[product] = orders
         result["KELP"] = []
