@@ -20,11 +20,11 @@ class Trader:
         result = {}
         orders = []
         if len(orderDepth.sell_orders) > 0 or len(orderDepth.buy_orders) > 0:
-            highBid = orderDepth.buy_orders.keys()[0] if len(orderDepth.buy_orders) > 0 else 9999
-            lowAsk = orderDepth.sell_orders.keys()[0] if len(orderDepth.sell_orders) > 0 else 10001
-            if state.position.get(product) < self.product_max:
+            highBid = list(orderDepth.buy_orders.keys())[0] if len(orderDepth.buy_orders) > 0 else 9999
+            lowAsk = list(orderDepth.sell_orders.keys())[0] if len(orderDepth.sell_orders) > 0 else 10001
+            if state.position.get(product) is None or state.position.get(product) < self.product_max:
                 orders.append(Order(product, highBid, self.calcBidQuantity(state)))
-            if state.position.get(product) > 0:
+            if state.position.get(product) is not None and state.position.get(product) > 0:
                 orders.append(Order(product, lowAsk, self.calcAskQuantity(state)))
         else:
             #bid for one lower than its value
