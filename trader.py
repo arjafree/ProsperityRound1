@@ -10,7 +10,7 @@ class Trader:
         return 1
 
     def calcAskQuantity(self, state:TradingState):
-        return 1
+        return -1
 
 
     
@@ -31,8 +31,8 @@ class Trader:
             if state.position.get(product) < self.product_max:
                 orders.append(Order(product, 9999, 5)) 
             #sell for one higher than its value
-            if state.position.get(product) > 0:
-                orders.append(Order(product, 10001, 5)) 
+            if state.position.get(product) > 4:
+                orders.append(Order(product, 10001, -5)) 
             
         result[product] = orders
         result["KELP"] = []
